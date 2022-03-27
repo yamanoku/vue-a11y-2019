@@ -1,0 +1,230 @@
+
+    <!doctype html>
+    <html lang="ja">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vue.js から考えるアクセシビリティについて - 2019</title>
+        <link rel="stylesheet" href="https://cdn.skypack.dev/yama-normalize">
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.5.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.5.0/styles/a11y-dark.min.css">
+        <script type="module">hljs.initHighlightingOnLoad()</script>
+        <style>img{height:auto}code{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em;}pre code.hljs{padding:calc(var(--rhythm)*3);}footer{padding: var(--y-rhythm-3);text-align: center;}</style>
+      </head>
+      <body>
+        <main id="main">
+          <h1>Vue.js から考えるアクセシビリティについて - 2019</h1>
+<p><img src="../images/about-accessibility-with-vuejs-2019.png" alt="写真：Vue.jsから考えるアクセシビリティについて - 2019"></p>
+<p>こちらは、<a href="https://adventar.org/calendars/3994">Webアクセシビリティ Advent Calendar 2019</a> の２１日目の記事です。</p>
+<p>Vue.js 開発における Web アクセシビリティ対応にまつわる内容となっております。</p>
+<p><strong>この記事は公開から１年以上が経過しています。内容が一部古い箇所があります。</strong></p>
+<section id="bio:about-accessibility-with-vuejs-2019">
+<h2>自己紹介</h2>
+<p><img src="../images/bio-photo-okuto.jpg" alt="写真：大山奥人"></p>
+<p>大山奥人（おおやまおくと）と申します。ネット上では、おおやまみちのく、yamanoku と名乗って活動しています。</p>
+<p>制作会社の Web デザイナーとして働き出し、株式会社GEEK でマークアップ・フロントエンドエンジニアとして従事した後、2019 年 10 月から株式会社クラウドワークスに在籍しております。</p>
+<p>役職は UX エンジニアです。個人ではアクセシビリティ啓蒙も行っています。</p>
+<h2>著書</h2>
+<h3>これからはじめるwebアクセシビリティ</h3>
+<p><img src="../images/web-accessibility-for-beginner.webp" alt="写真：これからはじめるWebアクセシビリティ"></p>
+<p>技術書典で「これからはじめるwebアクセシビリティ」という技術同人誌を発表しました。Web アクセシビリティをはじめる方向けの導入として知ってもらいたいのがきっかけでした。</p>
+<p>現在 BOOTH や Note でも PDF ファイルにて販売しております。</p>
+<ul>
+<li><a href="https://booth.pm/ja/items/1044446">これからはじめるwebアクセシビリティ - こんのいぬ - BOOTH</a></li>
+<li><a href="https://note.com/yamanoku/n/n3487a344ff84">「これからはじめるwebアクセシビリティ」をnoteにて販売します｜Okuto Oyama｜note</a></li>
+</ul>
+<p>また GitHub のフィードバック用のリポジトリの Issue にて修正や改善、提案を受け入れています。</p>
+<p><a href="https://github.com/konnoinu/accessibility_book-issues">yamanoku/accessibility_book-issues:「これからはじめるwebアクセシビリティ」へのFB専用リポジトリ</a></p>
+</section>
+<section id="web-accessibility:about-accessibility-with-vuejs-2019">
+<h2>アクセシビリティとは何か</h2>
+<h3>アクセシビリティの定義</h3>
+<p>まず Accessibility は「アクセスできる・アクセスしやすさ」と翻訳されます。Web アクセシビリティは Web にある情報やコンテンツに、あらゆる人がアクセスできようにすることを指します。</p>
+<p>あらゆる人がアクセスできるようにするとはどういうことかというと、デバイス操作に慣れない人でも簡単に閲覧できるようにしたり、難しい言い回しを避けて理解しやすくしたり、コントラストを調整して閲覧しやすいデザインにしたり、音声読み上げをしてくれるスクリーンリーダーといった支援技術を使うために考慮するといったことです。</p>
+<blockquote>
+<p>世界には10億人、言い換えると、人口の15から20%の割合で障害を持つ人がいます。国連は障害者の権利条約を定めており、人権としてWebを含んだ情報へのアクセスはほとんどの国で国連条約として批准されています。また数カ国では政策として義務付けられています。法律や規制にも関わらずアクセシビリティ標準を実行するのは、障害を持つ人たちにも、すべての人達にも不可欠なことです。</p>
+<p><a href="https://www.w3.org/WAI/videos/standards-and-benefits/ja">W3Cのアクセシビリティと標準技術 | Web Accessibility Initiative (WAI) | W3C</a></p>
+</blockquote>
+<h3>アクセシビリティ対応とは障害者対応なのか</h3>
+<p>よくある誤解なのですが、アクセシビリティ対応をすることは障害者対応だと捉えられていることがあります。</p>
+<p>たしかにアクセシビリティ対応は障害者が使えるようにする目的もあるのですが、それ自体が目的なのではなく「あらゆる人が使えるようにする」ことが目的なので、障害者対応だけが先鋭化されて誤解につながっているように思います。</p>
+<p>Google I/O では音声認識においてリアルタイムで字幕がつけられるライブキャプション機能がつけられました。聴覚障害の方はもちろん、ミュートにした状態でビデオを見たり、文章を書き起こして内容の理解につなげたりなど、あらゆる状況においてどんな人でも使えるようなものを生み出しています。</p>
+<figure>
+  <img src="https://o.aolcdn.com/dims-global/dims3/GLOB/resize/1200x577/quality/80/https://techcrunch.com/wp-content/uploads/2019/05/live-caption.jpg" width="1200" height="577" alt="Live Caption機能の紹介サムネイル">
+  <figcaption>
+    <a href="https://jp.techcrunch.com/2019/05/08/2019-05-07-live-transcription-and-captioning-in-android-are-a-boon-to-the-hearing-impaired/" target="_blank" rel="noopener">
+      Google I/Oはアクセシビリティ強化に全力、聴覚障害者にも電車でYouTubeを見るにも便利
+    </a>
+  </figcaption>
+</figure>
+<p>スクリーンリーダーも視覚障害者のためだけではなく、読字障害といった長文を読むのが困難な人を手助けしたり、文章の確認を目視だけで行うよりも読み上げてもらうことで間違いに気づきやすくなります。</p>
+<h3>皆が参加できるためのアクセシビリティ対応</h3>
+<p>アクセシビリティは使いやすさを重視する「ユーザビリティ」と混同されがちですが、使いやすいかどうか以前に使えるかどうかを考えることが目的です。そして、使えるということは、参加できるかどうかということにも繋がります。</p>
+<p>海外では法律でアクセシビリティを確保する決まりを定めていますが、これはアクセシビリティを手段として考えているより、アクセシビリティ自体を人権として捉えている部分があるからです。</p>
+</section>
+<section id="vuejs-and-web-accessibility:about-accessibility-with-vuejs-2019">
+<h2>Vue.js と Web アクセシビリティ</h2>
+<p>アクセシビリティについて何かを知っていただいたとことで、本題でもある Vue.js とアクセシビリティにまつわる話をしていきたいと思います。</p>
+<h3>アクセシビリティのドキュメントがない</h3>
+<p>Vue.js が日本で爆発的な人気を誇った要因の1つとして公式ドキュメントが日本語訳されていたことがあると思っています。私自身、ドキュメントの日本語訳があることで非常に取り組みやすかったです。</p>
+<p>ところでそんな Vue.js の公式ドキュメントでアクセシビリティについてどれだけ言及されているか皆さんはご存知でしょうか。</p>
+<p>実はアクセシビリティに言及されたドキュメントはなく、一部のドキュメント内で軽く触れているだけなのです。</p>
+<blockquote>
+<p>As we develop our <code>&lt;blog-post&gt;</code> component, some features may require communicating back up to the parent. For example, we may decide to include an <strong>accessibility</strong> feature to enlarge the text of blog posts, while leaving the rest of the page its default size:</p>
+<p><a href="https://v2.vuejs.org/v2/guide/components.html?redirect=true#Listening-to-Child-Components-Events">Components Basics — Listening-to-Child-Components-Events — Vue.js</a></p>
+</blockquote>
+<blockquote>
+<p>You can use this base icon as is- the only thing you might need to update is the viewBox depending on the viewBox of your icons. In the base, we’re making the width, height, iconColor, and name of the icon props so that it can be dynamically updated with props. The name will be used for both the <code>&lt;title&gt;</code> content and its id for <strong>accessibility</strong>.</p>
+<p><a href="https://v2.vuejs.org/v2/cookbook/editable-svg-icons.html?redirect=true#Base-Example">Editable SVG Icon Systems — Base Example — Vue.js</a></p>
+</blockquote>
+<p>React と Angular は公式ドキュメントにアクセシビリティの項目があり、開発における留意点などをまとめています。</p>
+<ul>
+<li><a href="https://ja.reactjs.org/docs/accessibility.html">アクセシビリティ – React</a></li>
+<li><a href="https://angular.jp/guide/accessibility">Angular におけるアクセシビリティ</a></li>
+</ul>
+<p>私は React や Angular と同様にアクセシビリティの項目を設けても良いと感じています。Vue.js の Issue を調べてみたところ Callum Macra 氏がドキュメントを作成を進めていたようなのですが、現在 Pull Request は止まっている状態です。</p>
+<p><a href="https://github.com/vuejs/v2.vuejs.org/issues/974">Accessibility docs · Issue #974 · vuejs/vuejs.org</a></p>
+<p>まだ途中ではありますが、現在編集が進んでいるドキュメントでは Web アクセシビリティを理解するにとても良くまとまっている内容でした。英語のドキュメントですが、皆さんにも見ていただきたいです。</p>
+<p><a href="https://github.com/callumacrae/vuejs.org/blob/a11y-docs/src/v2/guide/accessibility.md">vuejs.org/accessibility.md at a11y-docs · callumacrae/vuejs.org</a></p>
+<h3>Vue a11y</h3>
+<p>公式ドキュメントでのアクセシビリティ項目の作成はまだですが、代わりに Vue.js のアクセシビリティコミュニティは作られています。</p>
+<figure>
+  <img src="../images/vue-a11y-com.png" width="1920" height="1101" alt="Vue a11yサイトのスクリーンショット">
+  <figcaption>Vue <abbr title="accessibility">a11y</abbr></figcaption>
+</figure>
+<p>このコミュニティでは Vue.js のアクセシビリティプラグイン・ライブラリをいくつか作成しており、私も何かしら寄与できたらいいなと思っております。</p>
+</section>
+<section id="web-accessibility-notes:about-accessibility-with-vuejs-2019">
+<h2>Vue.js における実装の留意点</h2>
+<p>次に Web アクセシビリティを考慮する上で Vue.js の実装で留意しておくべきことについて紹介します。</p>
+<h3>何でも <code>div</code> で実装しない</h3>
+<p>Webアクセシビリティをつくるには、<strong>セマンティクスな実装を心がける</strong>、というのが基本です。これは <code>div</code> タグ（または <code>span</code> タグ）自体が悪いのではなく、そのコンポーネントの見た目以外で必要に応じたタグを使うべきということです。</p>
+<blockquote>
+<p>すべてのユーザインタフェースコンポーネントに、役割、状態、及び値の情報を提供することで、例えば、スクリーンリーダー、画面拡大ソフトウェア、及び音声認識ソフトウェアなどの、障害のある利用者が使用する支援技術との互換性を保つことが可能になる。</p>
+<p><a href="https://waic.jp/docs/UNDERSTANDING-WCAG20/ensure-compat-rsv.html">達成基準 4.1.2 を理解する | WCAG 2.0解説書</a></p>
+</blockquote>
+<p>たとえばボタンを実装するとき、<code>div</code> タグから実装するとしたらさまざまな考慮が必要となります。</p>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div role=&quot;button&quot; tabindex=&quot;0&quot; @click=&quot;handleClick&quot; @keyup=&quot;handleKeyUp&quot;&gt;button&lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+<p>これがセマンティクスな実装をすれば <code>button</code> タグ１つで済みます。セマンティクスでないことは本来もつ機能を損なってしまいかねません。</p>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;button type=&quot;button&quot;&gt;button&lt;/button&gt;
+&lt;/template&gt;
+</code></pre>
+<h3>キーボードで操作できるようにする</h3>
+<p>スクリーンリーダーを利用する人はキーボードを使って情報にアクセスします。なのでキーボードであらゆる情報へアクセスできるかを意識する必要はあります。</p>
+<p>また、スクリーンリーダーを使用しなくとも、パソコンの操作に慣れてきた人であれば、フォームの送信でエンターキーを押したり、ダイアログを閉じる際に ESC キーを押したり、マウス操作ではなくキーボード操作で行うことがあると思います。</p>
+<p>キーボード操作の考慮にあわせて、フォーカスのためのアウトラインも意識する必要があります。アウトラインを除去することで現在位置を把握しづらくなってしまうためです。</p>
+<p><a href="https://codesandbox.io/s/vue-accessible-modal-9m474">vue-accessible-modal - CodeSandbox</a></p>
+<h3>SPA 開発</h3>
+<p>モダンなフロントエンド開発において、<abbr title="Single Page Application">SPA</abbr> での実装は増えてきています。SPA は１つの HTML と JavaScript を使用した動的なコンテンツとして扱うため、ページ内で何がどう変わったのかを判定できないことがあります。</p>
+<p>ページの変更や状態の更新では <code>aria-live</code> 属性を使用した実装が必要となります。ただし属性値の扱いを理解する必要があるため、はじめは <a href="https://github.com/vue-a11y/vue-announcer">vue-announcer</a> というライブラリを利用してみても良いかも知れません。router でのページ移動の読み上げや、コンポーネント内での状態変化の読み上げも簡単に設定できるようになります。</p>
+<h3>Nuxt.jsの設定</h3>
+<p>盲点な部分かもしれませんが、<code>nuxt.config.js</code> での <code>htmlAttrs</code> で言語設定は必要です。</p>
+<pre><code class="language-js">module.exports = {
+  head: {
+    htmlAttrs: {
+      lang: 'ja'
+    }
+  }
+}
+</code></pre>
+<p>何も設定されていない場合、言語指定は <code>en</code>、つまり英語になっています。このままだとアプリケーションやサイトの見た目が日本語だとしても、ブラウザの判定では「英語の」アプリケーションやサイトとなってしまいます。</p>
+<p>未設定だとスクリーンリーダーによっては英語以外の部分を読み上げてくれない事態が起きます。<small>（これは Android の Talkback 機能にて確認できました）</small>。国際化対応をしていなくとも言語設定は気をつけなければなりません。</p>
+<h3>テスト・チェック</h3>
+<h4>vue-axe</h4>
+<p><a href="https://github.com/dequelabs/axe-core">axe-core</a> という deque systems という会社が開発しているアクセシビリティチェックをするライブラリがあります。これは Chrome の <a href="https://developers.google.com/web/tools/lighthouse/">Lighthouse</a> のアクセシビリティ項目チェックでも使用されているものです。</p>
+<p><img src="../images/vue-axe.png" alt="vue-axeの動作イメージ。Chromeのコンソール上にアラート結果が出ている"></p>
+<p>こちらは組み込むことでコンソール上でアクセシビリティチェックを通してくれます。以下は設定になります。</p>
+<pre><code class="language-bash"># NPM
+$ npm install -D axe-core vue-axe
+
+# Yarn
+$ yarn add -D axe-core vue-axe
+</code></pre>
+<pre><code class="language-js">import Vue from 'vue'
+
+if (process.env.NODE_ENV !== 'production') { // development environment
+  const VueAxe = require('vue-axe').default
+  const AXE_LOCALE_JA = require('axe-core/locales/ja.json') // locale setting
+
+  Vue.use(VueAxe, {
+    config: {
+      locale: AXE_LOCALE_JA
+    },
+    clearConsoleOnUpdate: false // Clears the console each time vue-axe runs
+  })
+}
+</code></pre>
+<h4>Storybook</h4>
+<p>自社のコンポーネントライブラリ、デザインシステムで利用されている方もいるかもしれません。こちらは単体ではチェックできませんが、アドオンに <a href="https://www.npmjs.com/package/@storybook/addon-a11y">storybook-addon-a11y</a> があり、これを使うことでコンポーネントやストーリーに対してアクセシビリティチェックを通すことが出来ます。</p>
+<p><img src="https://raw.githubusercontent.com/storybookjs/storybook/HEAD/addons/a11y/docs/screenshot.png" alt="storybook-addon-a11y スクリーンショット"></p>
+<h4>eslint-plugin-vuejs-accessibility</h4>
+<p>JavaScript の静的検証ツールとして使われる eslint にはプラグインでアクセシビリティチェックができるものもあります。CI/CD に組み込むことでビルド時にエラーを発見することも可能です。</p>
+<p>チェック内容の例をあげると、<code>img</code> の <code>alt</code> 属性に値が入っているか、フォーム要素にはラベル（<code>label</code>）が付与されているか、絵文字をアクセシブルに実装できているか、などがあります。</p>
+<pre><code class="language-html">&lt;!-- Fail --&gt;
+&lt;span&gt;🐼&lt;/span&gt;
+&lt;!-- Good --&gt;
+&lt;span role=&quot;img&quot; aria-label=&quot;Panda&quot;&gt;🐼&lt;/span&gt;
+</code></pre>
+<p>ただし Lint はあくまでコード規約をチェックするものなので、エラー判定のみに頼りきらないようにしましょう。</p>
+<h3>ユーザテスト</h3>
+<p>機械的なテストについて紹介しましたが、自動化によるチェックやテストではすべてのアクセシビリティの問題のうちたった 30% しか確認できないという研究結果が出ています。</p>
+<p><a href="https://accessibility.blog.gov.uk/2017/02/24/what-we-found-when-we-tested-tools-on-the-worlds-least-accessible-webpage/">What we found when we tested tools on the world’s least-accessible webpage - Accessibility in government</a></p>
+<p>そのため、ユーザテストを通したチェックも必要となります。ブラウザチェックやスクリーンリーダーテスト、キーボードテストといった実際に見てみる、触ってみるのを試した上で問題ないかをテストしていきます。</p>
+<p>どういったテストをすべきかは、WCAG を参考にしましょう。これは W3C 勧告として公開された Web コンテンツをアクセシブルにするためのガイドラインで、どうすることでアクセシブルになるか、技術に依存しない検証方法も提示されています。</p>
+<p><a href="https://waic.jp/docs/WCAG21/">Web Content Accessibility Guidelines (WCAG) 2.1</a></p>
+<p>しかし毎回 WCAG の仕様を参照しにいくことも大変なので、必要な要素を参考にした上で独自のガイドラインを作成できると良さそうです。</p>
+<p><a href="https://openameba.github.io/a11y-guidelines/">Ameba Accessibility Guidelines</a></p>
+</section>
+<section id="in-conclusion:about-accessibility-with-vuejs-2019">
+<h2>おわりに</h2>
+<p>1989 年 3 月 12 日、欧州原子核研究機構（CERN）のティム・バーナーズ＝リーは「Information Management: A Proposal」（情報管理：提案）を執筆し、さらに進んだ情報管理システムを描きました。これによって WWW（World Wide Web）が発明されました。</p>
+<figure>
+  <img src="https://live.staticflickr.com/8221/8314288381_ebc4c1b074_c.jpg" width="220" height="240" alt="写真：ティム・バーナーズ＝リー">
+  <figcaption>
+    <a href="https://www.w3.org/History/1989/proposal.html" target="_blank" rel="noopener">
+      The original proposal of the WWW, HTMLized
+    </a>
+  </figcaption>
+</figure>
+<blockquote>
+<p>The power of the Web is in its universality. Access by everyone regardless of disability is an essential aspect.</p>
+<p><a href="https://www.w3.org/Press/IPO-announce">Press Release: W3C Launches International Program Office for WAI</a></p>
+</blockquote>
+<p>ティム・バーナーズ＝リーは「Webのパワーは、その普遍性にある。障害の有無に関係なく、誰もが使えることが、その本質である」と説きました。</p>
+<blockquote>
+<p>Whatever the device you use for getting your information out, it should be the same information.</p>
+<p><a href="https://www.wired.com/1999/10/interview-with-the-webs-creator/">Interview with the Web’s Creator | WIRED</a></p>
+</blockquote>
+<p>そして「情報を取得するためにどんなデバイスを使用していたとしても、取得できる情報は同じであるべきだ。」ともインタビューで答えていました。これこそまさに Web がアクセシビリティを実現するソリューションであることを示しています。</p>
+<p>その証拠にこの記事を読んでいるあなたは、インターネットを使うことができれば、場所や時間を問わずにこの情報にアクセスすることができています。Web にまつわる業務をしているだけでもアクセシブルなことを実現できている、ということは認識しておいても良いかもしれません。</p>
+<p>そしてあれから３０年経った現在、<a href="https://www.digima-japan.com/knowhow/world/15167.php">世界人口におけるインターネット利用者の数は 50% のハーフラインを超えました</a>。</p>
+<p>この数が大きくなることで、よりインターネットに触れられないことの格差というものも大きくなるように感じられます。Web というものを取り扱う人たちであればアクセシブルにしていくということは、より命題となってくることでしょう。</p>
+<blockquote>
+<p>ウェブのための戦いは、我々の時代におけるもっとも重要な大義の一つである。今日、世界の半分がネットにつながっている。その残り半分がネットにつながらないまま取り残されることなく、皆が平等、機会、創造性を推進するウェブに貢献できるようにすることは、かつてないほど差し迫った課題なのだ。</p>
+<p>（中略）</p>
+<p>ウェブは皆のためにあり、我々が力を合わせれば、ウェブを変える力を持つ。それは簡単ではないだろう。けれども、大きな夢を見ずにたくさん働ければ、我々は自分たちが望むウェブを手にできるのだ。</p>
+<p><a href="https://www.yamdas.org/column/technique/web-birthday-30j.html">30 years on, what’s next #ForTheWeb? 日本語訳</a></p>
+</blockquote>
+<h3>Vue.js を通じて、Web を活かして、アクセシビリティに取り組もう</h3>
+<p>アクセシビリティなものを生み出すのに特定のフレームワークじゃないとできないということはありません。ですが Vue.js は親しみやすく門戸が広いフレームワークだと感じています。</p>
+<p>アクセシブルにしていくことは「やっておしまい」「０か１か」という話でもなく、プロダクトを作りながら継続的に見直し試行錯誤していく部分もあるので、「いずれやる」ものとして捉えず、じっくりゆっくりと一つずつ進めていければと考えています。</p>
+<blockquote>
+<p>“Start Small, Start Now（小さく初めていこう、でも、できることから今やりましょう）”と呼びかけていきたいし、自分自身も肝に銘じておきたい。</p>
+<p><a href="https://code.kzakza.com/2019/03/start-small-start-now/">アクセシビリティは “Start Small, Start Now” でいこう | kzakza</a></p>
+</blockquote>
+<p>本記事を通じて、開発者やデザイナー、Vue.js に関わる人たちが少しでもアクセシビリティに興味をもち、これからアクセシビリティ対応をしてゆくためのエンパワーとなれることを願っています。</p>
+<p>まだまだやることが多く、進めづらい分野ではありますが、少しずつでもこの輪が広がればいいなと思っています。アクセシビリティとはいかなる人も受け入れてくれるものなのだから。</p>
+</section>
+
+        </main>
+        <footer>
+          <p>Copyright 2019, Okuto Oyama</p>
+          <p>Source : <a href="https://github.com/yamanoku/vue-a11y-2019/" target="_blank" rel="noopener">yamanoku/vue-a11y-2019</a></p>
+        </footer>
+      </body>
+    </html>
+  
