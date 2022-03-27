@@ -7,10 +7,9 @@ on:
     types: [closed]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  deploy:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     strategy:
       matrix:
         node-version: [16.x]
@@ -23,16 +22,19 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install and build
-      run: |
-        rm package-lock.json
-        npm install
-        npm run build
-      env:
-        CI: true
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+      - run: npm ci
+      - run: npm run build
 
     - name: deploy
       uses: peaceiris/actions-gh-pages@v3
+      if: ${{ github.ref == 'refs/heads/main' }}
       with:
         github_token: ${{ secrets.VUE_A11Y_2019_DEPLOY_TOKEN }}
         publish_branch: gh-pages
