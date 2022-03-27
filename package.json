@@ -3,7 +3,8 @@
   "description": "This article is about web accessibility support in Vue.js development.",
   "scripts": {
     "build": "eleventy",
-    "serve": "eleventy --serve"
+    "serve": "eleventy --serve",
+    "deploy": "gh-pages -d docs -b gh-pages -m 'chore: deploy' -t"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "homepage": "https://github.com/yamanoku/vue-a11y-2019#readme",
   "dependencies": {
     "@11ty/eleventy": "1.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "3.2.3"
   }
 }
