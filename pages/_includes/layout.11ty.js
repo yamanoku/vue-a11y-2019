@@ -6,7 +6,7 @@ exports.render = (data) => {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${data.title}</title>
-        <meta name="og:title" content="yamanoku.net">
+        <meta name="og:title" content="${data.title}">
         <meta name="og:description" content="${data.description}">
         <meta name="og:image" content="https://yamanoku.net/vue-a11y-2019/images/ogp.png">
         <meta name="twitter:card" content="summary_large_image">
