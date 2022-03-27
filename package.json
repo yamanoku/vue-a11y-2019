@@ -1,0 +1,21 @@
+{
+  "name": "vue-a11y-2019",
+  "description": "This article is about web accessibility support in Vue.js development.",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yamanoku/vue-a11y-2019.git"
+  },
+  "author": "yamanoku",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yamanoku/vue-a11y-2019/issues"
+  },
+  "homepage": "https://github.com/yamanoku/vue-a11y-2019#readme",
+  "dependencies": {
+    "@11ty/eleventy": "1.0.0"
+  }
+}
