@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - main
+    types: [closed]
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -41,7 +45,8 @@ jobs:
 
       - name: gh-pages deploy
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          github_token: ${{ secrets.VUE_A11Y_2019_DEPLOY_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
           enable_jekyll: false
