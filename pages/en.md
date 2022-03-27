@@ -1,6 +1,7 @@
 ---
 layout: layout
 title: About accessibility with Vue.js - 2019
+description: こちらは、Webアクセシビリティ Advent Calendar 2019 の２１日目の記事です。この記事では Vue.js 開発における Web アクセシビリティ対応にまつわる内容となっております。
 lang: en
 ---
 
