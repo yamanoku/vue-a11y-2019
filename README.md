@@ -1,4 +1,4 @@
-# vue-a11y-2019
+# Vue.js から考えるアクセシビリティについて - 2019 / About accessibility with Vue.js - 2019
 
 こちらは、[Webアクセシビリティ Advent Calendar 2019](https://adventar.org/calendars/3994) の２１日目の記事です。
 
