@@ -240,7 +240,7 @@ if (process.env.NODE_ENV !== "production") {
 
 Some of you may be using it in your own component library or design system. It can't be checked by itself, but there is an add-on [storybook-addon-a11y](https://www.npmjs.com/package/@storybook/addon-a11y) that allows you to pass accessibility checks on components and stories.
 
-![Screenshot of storybook-addon-a11y](https://raw.githubusercontent.com/storybookjs/storybook/HEAD/addons/a11y/docs/screenshot.png)
+![Screenshot of storybook-addon-a11y](https://raw.githubusercontent.com/storybookjs/storybook/main/addons/a11y/docs/screenshot.png)
 
 #### eslint-plugin-vuejs-accessibility
 
