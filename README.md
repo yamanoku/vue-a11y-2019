@@ -17,3 +17,7 @@ This is about web accessibility support in Vue.js development.
 **This article has been published for more than a year. Some parts of the content are outdated.**
 
 [English Page](https://yamanoku.net/vue-a11y-2019/en/)
+
+## License
+
+[CC BY-NC-SA 4.0](./LICENSE)
