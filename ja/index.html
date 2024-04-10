@@ -167,7 +167,7 @@ if (process.env.NODE_ENV !== 'production') { // development environment
 </code></pre>
 <h4>Storybook</h4>
 <p>自社のコンポーネントライブラリ、デザインシステムで利用されている方もいるかもしれません。こちらは単体ではチェックできませんが、アドオンに <a href="https://www.npmjs.com/package/@storybook/addon-a11y" target="_blank" rel="noopener">storybook-addon-a11y</a> があり、これを使うことでコンポーネントやストーリーに対してアクセシビリティチェックを通すことが出来ます。</p>
-<p><img src="https://raw.githubusercontent.com/storybookjs/storybook/main/addons/a11y/docs/screenshot.png" alt="storybook-addon-a11y スクリーンショット"></p>
+<p><img src="https://raw.githubusercontent.com/storybookjs/storybook/next/code/addons/a11y/docs/screenshot.png" alt="storybook-addon-a11y スクリーンショット"></p>
 <h4>eslint-plugin-vuejs-accessibility</h4>
 <p>JavaScript の静的検証ツールとして使われる eslint にはプラグインでアクセシビリティチェックができるものもあります。CI/CD に組み込むことでビルド時にエラーを発見することも可能です。</p>
 <p>チェック内容の例をあげると、<code>img</code> の <code>alt</code> 属性に値が入っているか、フォーム要素にはラベル（<code>label</code>）が付与されているか、絵文字をアクセシブルに実装できているか、などがあります。</p>
