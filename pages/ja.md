@@ -237,7 +237,7 @@ if (process.env.NODE_ENV !== 'production') { // development environment
 
 自社のコンポーネントライブラリ、デザインシステムで利用されている方もいるかもしれません。こちらは単体ではチェックできませんが、アドオンに [storybook-addon-a11y](https://www.npmjs.com/package/@storybook/addon-a11y) があり、これを使うことでコンポーネントやストーリーに対してアクセシビリティチェックを通すことが出来ます。
 
-![storybook-addon-a11y スクリーンショット](https://raw.githubusercontent.com/storybookjs/storybook/next/code/addons/a11y/docs/screenshot.png)
+![storybook-addon-a11y スクリーンショット](https://storybookblog.ghost.io/content/images/2021/11/a11y-addon.png)
 
 #### eslint-plugin-vuejs-accessibility
 
